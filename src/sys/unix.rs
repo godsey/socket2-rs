@@ -623,7 +623,7 @@ impl Socket {
         let sourceaddr = to_s_addr(sourceaddr);
         let multiaddr = to_s_addr(multiaddr);
         let interface = to_s_addr(interface);
-        let mreq_source = libc::ip_mreq_source {
+        let mreq_source = libc::ip_mreqn {
             imr_multiaddr: libc::in_addr { s_addr: multiaddr },
             imr_sourceaddr: libc::in_addr { s_addr: sourceaddr },
             imr_interface: libc::in_addr { s_addr: interface },
@@ -654,7 +654,7 @@ impl Socket {
         let sourceaddr = to_s_addr(sourceaddr);
         let multiaddr = to_s_addr(multiaddr);
         let interface = to_s_addr(interface);
-        let mreq_source = libc::ip_mreq_source {
+        let mreq_source = libc::ip_mreqn {
             imr_multiaddr: libc::in_addr { s_addr: multiaddr },
             imr_sourceaddr: libc::in_addr { s_addr: sourceaddr },
             imr_interface: libc::in_addr { s_addr: interface },
