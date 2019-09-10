@@ -618,7 +618,19 @@ impl Socket {
         };
         unsafe { self.setsockopt(libc::IPPROTO_IP, libc::IP_ADD_MEMBERSHIP, mreq) }
     }
-
+    
+    pub fn join_source_specific_multicast_v4(&self, sourceaddr: &Ipv4Addr, multiaddr: &Ipv4Addr, interface: &Ipv4Addr) -> io::Result<()> {
+        let sourceaddr = to_s_addr(sourceaddr);
+        let multiaddr = to_s_addr(multiaddr);
+        let interface = to_s_addr(interface);
+        let mreq_source = libc::ip_mreq_source {
+            imr_multiaddr: libc::in_addr { s_addr: multiaddr },
+            imr_sourceaddr: libc::in_addr { s_addr: sourceaddr },
+            imr_interface: libc::in_addr { s_addr: interface },
+        };
+        unsafe { self.setsockopt(libc::IPPROTO_IP, libc::IP_ADD_SOURCE_MEMBERSHIP, mreq_source) }
+    }
+    
     pub fn join_multicast_v6(&self, multiaddr: &Ipv6Addr, interface: u32) -> io::Result<()> {
         let multiaddr = to_in6_addr(multiaddr);
         let mreq = libc::ipv6_mreq {
@@ -636,6 +648,18 @@ impl Socket {
             imr_interface: libc::in_addr { s_addr: interface },
         };
         unsafe { self.setsockopt(libc::IPPROTO_IP, libc::IP_DROP_MEMBERSHIP, mreq) }
+    }
+
+    pub fn leave_source_specific_multicast_v4(&self, sourceaddr: &Ipv4Addr, multiaddr: &Ipv4Addr, interface: &Ipv4Addr) -> io::Result<()> {
+        let sourceaddr = to_s_addr(sourceaddr);
+        let multiaddr = to_s_addr(multiaddr);
+        let interface = to_s_addr(interface);
+        let mreq_source = libc::ip_mreq_source {
+            imr_multiaddr: libc::in_addr { s_addr: multiaddr },
+            imr_sourceaddr: libc::in_addr { s_addr: sourceaddr },
+            imr_interface: libc::in_addr { s_addr: interface },
+        };
+        unsafe { self.setsockopt(libc::IPPROTO_IP, libc::IP_DROP_SOURCE_MEMBERSHIP, mreq_source) }
     }
 
     pub fn leave_multicast_v6(&self, multiaddr: &Ipv6Addr, interface: u32) -> io::Result<()> {
